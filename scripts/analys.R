@@ -1,14 +1,16 @@
 
-# Fördelning av kostnaderna
+source("scripts/stadning.R")
 
-ggplot(insurance_costs_clean, aes(x = charges)) +
+# Fördelning av kostnaderna
+p_cost_distribution <- ggplot(insurance_costs_clean, aes(x = charges)) +
   geom_histogram(fill = "steelblue", bins = 20)
+
+p_cost_distribution
 
 # Histogramet visar att försäkringskostnaderna för de flesta ligger runt 10000kr, dock har en del kunder en högre kostnad.
 
 
 # Samband mellan ålder och kostnad
-
 insurance_costs_clean %>%
   summarise(correlation = cor(age, charges, use = "complete.obs"))
 
@@ -29,7 +31,6 @@ p_age_charge
 
 
 # Samband mellan BMI och kostnad 
-
 insurance_costs_clean %>%
   summarise(correlation = cor(bmi, charges, use = "complete.obs"))
 
@@ -49,9 +50,7 @@ p_bmi_charge
 # Sambandet mellan BMI och kostnader är positivt, vilket tyder på att ett högre BMI värde kan vara kopplat till högre kostnader.
 
 
-
 # Skillnad mellan BMI grupper
-
 insurance_costs_clean %>%
   group_by(bmi_category) %>%
   summarise(avg_cost = mean(charges, na.rm = TRUE))
@@ -67,7 +66,6 @@ p_bmi_groups <- ggplot(insurance_costs_clean, aes(x = bmi_category, y = charges)
   theme_minimal() 
 
 p_bmi_groups
-
 
 # Median för grupperna verkar öka i samband med BMI-kategori.
 # För grupperna Overweight och Obese är kostnaderna större än för resterande grupper med median kostnad 10867kr respektive 10119kr, som tyder på att BMI-grupper kan påverka försäkringskostnader.
@@ -95,9 +93,7 @@ p_smoker_cost
 # Boxploten visar tydligt att kostnaden är högre för rökare än för icke-rökare som tyder på att rökning har en betydande roll för försäkringskostnaden.
 
 
-
 # Samband mellan kronisk sjukdom och försäkringskostnad
-
 insurance_costs_clean %>%
   group_by(chronic_condition) %>%
   summarise(avg_cost = mean(charges, na.rm = TRUE))
@@ -115,4 +111,20 @@ p_chronic_condition_cost
 
 # Individer med kroniska sjukdommar har högre kostnader, som visar att hälsotillstånd är en betydande faktor som påverkar försäkringskostnader.
 
+
+
+# Regressionsanalys
+
+
+
+
+
+
+# Sparar visualiseringarna
+ggsave("output/visualisering/cost_distribution.png", p_cost_distribution, width = 8, height = 5)
+ggsave("output/visualisering/age_charge.png", p_age_charge, width = 8, height = 5)
+ggsave("output/visualisering/bmi_charge.png", p_bmi_charge, width = 8, height = 5)
+ggsave("output/visualisering/bmi_groups.png", p_bmi_groups, width = 8, height = 5)
+ggsave("output/visualisering/smoker_cost.png", p_smoker_cost, width = 8, height = 5)
+ggsave("output/visualisering/chronic_condition_cost.png", p_chronic_condition_cost, width = 8, height = 5)
 
