@@ -56,6 +56,7 @@ insurance_costs_clean <- insurance_costs_clean %>%
   )
 
 
+
 glimpse(insurance_costs_clean)
 
 

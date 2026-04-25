@@ -53,6 +53,7 @@ p4 <- ggplot(insurance_costs_raw, aes(x = charges)) +
 p1 + p2 + p3 + p4
 
 
+
 # Viktiga datatyper:
 # - age, region, bmi, children, smoker, chronic_condition, exercise_level, charges
 
