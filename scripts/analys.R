@@ -114,11 +114,21 @@ p_chronic_condition_cost
 
 
 # Regressionsanalys
+model1 <- lm(charges ~ age + bmi + smoker + chronic_condition + children, data = insurance_costs_clean)
 
+summary(model1)
 
+# Analysen visar att rökning har störst påverkan på försäkringskostnader. Om man räker ökar kostnaden med 7818kr.
+# Även kronisk sjukdom har en påverkan, då personer med kronisk sjukdom har 4074kr högre kostnad.
+# Regressionsanalysen visar också ett positivt samband för ålder och BMI.
+# Däremot om man har barn har inte en så signifikant påverkan.
+# Att rökare och kroniska sjukdommar har störst betydelse för försäkringskostnader verkar rimligt och stämmer överens med analysen.
+# Begränsningar för modellen är att den inte fångar upp alla faktorer som påverkar kostnader,
 
+# R-squared = 0.6929 -> modellen förklarar 69% av variationen och har alltså en relativt bra bredd.
+# p-value = 2.2e-16 -> mindre än 1, som betyder att de flesta variabler är signifikanta och tillförlitliga.
 
-
+#Regressionsanalysen bekräftar de tidigare resultat från analysen om att rökning och kronisk sjukdom hade störst påverkan, samt att ålder och BMI även var viktiga faktorer.
 
 # Sparar visualiseringarna
 ggsave("output/visualisering/cost_distribution.png", p_cost_distribution, width = 8, height = 5)
