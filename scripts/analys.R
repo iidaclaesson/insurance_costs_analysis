@@ -1,5 +1,4 @@
 
-
 # Fördelning av kostnaderna
 
 ggplot(insurance_costs_clean, aes(x = charges)) +
@@ -17,16 +16,16 @@ p_age_charge <- ggplot(insurance_costs_clean, aes(x= age, y = charges)) +
   geom_point(alpha = 0.5, color = "steelblue") +
   geom_smooth(method = "lm", se = TRUE) +
   labs(
-    title = "Samband mellan ålder och kostnad",
-    x = "Ålder",
-    y = "Kostnad"
+    title = "Correlation between age and cost",
+    x = "Age",
+    y = "Cost"
   ) +
   theme_minimal()
 
 p_age_charge
 
-# correlation=0.258
-# Finns ett positivt samband mellan ålder och kostnader, som visar att äldre har högre försäkringskostnader
+# Correlation = 0.258
+# Finns ett positivt samband mellan ålder och kostnader, som visar att äldre har högre försäkringskostnader.
 
 
 # Samband mellan BMI och kostnad 
@@ -38,16 +37,16 @@ p_bmi_charge <- ggplot(insurance_costs_clean, aes(x = bmi, y = charges)) +
   geom_point(alpha = 0.5, color = "steelblue") +
   geom_smooth(method = "lm", se = TRUE) +
   labs(
-    title = "Samband mellan BMI och kostnad",
+    title = "Correlation mellan BMI och cost",
     x = "BMI",
-    y = "Kostnad"
+    y = "Cost"
   ) +
   theme_minimal()
 
 p_bmi_charge
 
-# correlation = 0.152
-# Sambandet mellan BMI och kostnader är positivt, vilket tyder på att ett högre BMI värde kan vara kopplat till högre kostnader
+# Correlation = 0.152
+# Sambandet mellan BMI och kostnader är positivt, vilket tyder på att ett högre BMI värde kan vara kopplat till högre kostnader.
 
 
 
@@ -60,9 +59,9 @@ insurance_costs_clean %>%
 p_bmi_groups <- ggplot(insurance_costs_clean, aes(x = bmi_category, y = charges)) +
   geom_boxplot(alpha = 0.7) +
   labs(
-    title = "Kostnad för BMI-kategorier",
+    title = "Cost for BMI-categories",
     x = "BMI",
-    y = "Kostnad"
+    y = "Cost"
     ) +
   coord_flip() +
   theme_minimal() 
@@ -84,15 +83,36 @@ insurance_costs_clean %>%
 p_smoker_cost <- ggplot(insurance_costs_clean, aes(x =smoker, y =charges)) +
   geom_boxplot(alpha = 0.7) +
   labs(
-    title = "Försäkringskostnad för rökare vs icke-rökare",
-    x = "Rökare",
-    y = "Kostnad"
+    title = "Cost for smoker vs non smoker",
+    x = "Smoking?",
+    y = "Cost"
   ) +
-  coord_flip() +
   theme_minimal() 
 
 p_smoker_cost
 
-# Medianen för försäkringskostnader för de som röker verkar dubbelt så stor som för icke-rökare som har en kostnad på 8586kr och för rökare 16537kr.
-# Boxploten visar tydligt att försäkringskostnaden är högre för rökare än för icke-rökare som tyder på att rökning har en betydande roll
+# Medianen för kostnader för de som röker verkar dubbelt så stor som för icke-rökare som har en kostnad på 8586kr och för rökare 16537kr.
+# Boxploten visar tydligt att kostnaden är högre för rökare än för icke-rökare som tyder på att rökning har en betydande roll för försäkringskostnaden.
+
+
+
+# Samband mellan kronisk sjukdom och försäkringskostnad
+
+insurance_costs_clean %>%
+  group_by(chronic_condition) %>%
+  summarise(avg_cost = mean(charges, na.rm = TRUE))
+
+p_chronic_condition_cost <- ggplot(insurance_costs_clean, aes(x = chronic_condition, y = charges)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Cost depending on chronic condition",
+    x = "Cronic disease?",
+    y = "Cost"
+    ) +
+  theme_minimal() 
+
+p_chronic_condition_cost
+
+# Individer med kroniska sjukdommar har högre kostnader, som visar att hälsotillstånd är en betydande faktor som påverkar försäkringskostnader.
+
 
