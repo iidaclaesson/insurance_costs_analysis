@@ -1,0 +1,169 @@
+---
+title: "Insurance Costs Analysis Report"
+author: Ida Claesson
+date: 2026-04-26
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+options(width = 200)
+knitr::opts_chunk$set(root.dir = "..", echo = FALSE, message = FALSE, warning = FALSE)
+
+# Svensk locale på olika operativsystem
+suppressWarnings(try(Sys.setlocale("LC_ALL", "Swedish"), silent = TRUE))
+suppressWarnings(try(Sys.setlocale("LC_ALL", "sv_SE.UTF-8"), silent = TRUE))
+suppressWarnings(try(Sys.setlocale("LC_ALL", "Swedish_Sweden.1252"), silent = TRUE))
+
+library(tidyverse)
+library(skimr)
+library(patchwork)
+
+insurance_costs_raw <- readr::read_csv("data/insurance_costs.csv")
+```
+
+
+```{r, include = FALSE}
+insurance_costs_raw <- read_csv("data/insurance_costs.csv")
+insurance_costs_clean <- insurance_costs_raw 
+
+names(insurance_costs_clean)
+
+colSums(is.na(insurance_costs_clean))
+
+
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    region = str_to_lower(region),
+    smoker = str_to_lower(smoker),
+    plan_type = str_to_lower(plan_type)
+  )
+
+# Ändrar datatyper
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    sex = as.factor(sex),
+    smoker = as.factor(smoker),
+    region = as.factor(region),
+    plan_type = as.factor(plan_type),
+    chronic_condition = as.factor(chronic_condition),
+    exercise_level = as.factor(exercise_level)
+  )
+
+
+# Skapar nya variabler
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    bmi_category = case_when(
+      bmi < 18.5 ~ "Underweight",
+      bmi < 25 ~ "Normal",
+      bmi < 30 ~ "Overweight",
+      TRUE ~ "Obese"
+    )
+  )
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    bmi_category = factor(
+      bmi_category,
+      levels = c("Underweight", "Normal", "Overweight", "Obese"),
+      ordered = TRUE
+    )
+  )
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    age_group = case_when(
+      age < 30 ~ "Young",
+      age < 50 ~ "Middle",
+      TRUE ~ "Older"
+    )
+  )
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    risk_score = prior_accidents + prior_claims
+  )
+
+```
+
+
+## Syfte
+
+Syftet med analysen är att undersöka vilka faktorer som påverkar försäkringskostnader (charges), samt att analysera storleken på dessa samband och se över skillnader mellan olika grupper.
+
+## Metod
+
+Datan städades och nya variabler skapades, för att bidra till en tydligare analys.
+
+Statistik och visualiseringar användes för att undersöka sambandet mellan försäkringskostnader och variabler som BMI, rökning, ålder och kronisk sjukdom.
+
+För att analysera vilka faktorer som verkligen hade störst påverkan på kostnaderna, användes en regressionsmodell.
+
+
+## Resultat och regressionsanalys
+
+Både den statistiska analysen och regressionsmodellen visar att kostnader varierar mellan grupper. Där grupper som rökare och kronisk sjukdom visas ha högre kostnader. Samt att BMI och ålder har en viss påverkan.
+
+
+```{r}
+p_smoker_cost <- ggplot(insurance_costs_clean, aes(x =smoker, y =charges)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Cost for smoker vs non smoker",
+    x = "Smoking?",
+    y = "Cost"
+  ) +
+  theme_minimal() 
+
+p_smoker_cost
+```
+
+Medianen för kostnader för de som röker är alltså dubbelt så stor som för icke-rökare som har en kostnad på 8586kr och för rökare 16537kr.
+
+
+
+```{r}
+
+p_chronic_condition_cost <- ggplot(insurance_costs_clean, aes(x = chronic_condition, y = charges)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Cost depending on chronic condition",
+    x = "Cronic disease?",
+    y = "Cost"
+    ) +
+  theme_minimal() 
+
+p_chronic_condition_cost
+```
+
+Individer med en kronisk sjukdom har högre kostnader, som visar att hälsotillstånd är en betydande faktor som påverkar försäkringskostnader.
+
+
+### Regressionsanalys
+```{r}
+model1 <- lm(charges ~ age + bmi + smoker + chronic_condition + children, data = insurance_costs_clean)
+
+summary(model1)
+```
+Regressionsanalysen visar att rökning har störst påverkan på försäkringskostnader. Om man röker ökar kostnaden med 7818kr.
+
+Även kronisk sjukdom har en påverkan, då personer med kronisk sjukdom har 4074kr högre kostnad.
+
+Analysen visar även ett positivt samband mellan BMI, ålder med kostnader. Däremot om man har barn har inte en så stor påverkan.
+
+
+## Slutsatser och begränsningar
+
+Regressionsanalysen bekräftar de tidigare resultat från analysen om att rökning och kronisk sjukdom hade störst betydelse för försäkringskostnader, samt att ålder och BMI även var viktiga faktorer. 
+
+Denna analys verkar rimlig med tanke på att den pekar på att livsstilsfaktorer som påverkar hälsan har en stor betydelse för försäkringskostnader. Att riskfaktorer som sjukdomar och rökning kan leda till en högre kostnad.
+
+
+### Begränsningar
+Begränsningar för modellen är att den inte fångar upp alla faktorer som påverkar kostnader, den förklarar endast 69% av variationen.
+
+En förbättring kan därmed vara att inkludera fler relevanta variabler.
+
+Den bygger även på antaganden om att sambanden hänger ihop, vilket inte alltid behöver stämma i verkligheten.

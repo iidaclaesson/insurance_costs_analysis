@@ -18,7 +18,7 @@ library(tidyverse)
 library(skimr)
 library(patchwork)
 
-orders_raw <- readr::read_csv("data/insurance_costs.csv")
+insurance_costs_raw <- readr::read_csv("data/insurance_costs.csv")
 ```
 
 ## Inläsning av data
@@ -131,6 +131,15 @@ insurance_costs_clean <- insurance_costs_clean %>%
       bmi < 25 ~ "Normal",
       bmi < 30 ~ "Overweight",
       TRUE ~ "Obese"
+    )
+  )
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
+    bmi_category = factor(
+      bmi_category,
+      levels = c("Underweight", "Normal", "Overweight", "Obese"),
+      ordered = TRUE
     )
   )
 
