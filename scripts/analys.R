@@ -127,7 +127,12 @@ summary(model1)
 
 # R-squared = 0.6929 -> modellen förklarar 69% av variationen och har alltså en relativt bra bredd.
 # p-value = 2.2e-16 -> mindre än 1, som betyder att de flesta variabler är signifikanta och tillförlitliga.
-#Regressionsanalysen bekräftar de tidigare resultat från analysen om att rökning och kronisk sjukdom hade störst påverkan, samt att ålder och BMI även var viktiga faktorer.
+
+# Båda analyserna pekar på att rökning har största påvekan på försäkringskostnader, följt av kronisk sjukdom. 
+# Samt att ålder och BMI har positiv korrelation.
+# Regressionsanalysen bekräftar de tidigare resultat från analysen om att rökning och kronisk sjukdom hade störst påverkan, samt att ålder och BMI även var viktiga faktorer.
+# Modellen fångar dock inte alla faktorer, därmed kan en förbättring vara att inkludera fler relevanta variabler.
+
 
 # Sparar visualiseringarna
 ggsave("output/visualisering/cost_distribution.png", p_cost_distribution, width = 8, height = 5)
