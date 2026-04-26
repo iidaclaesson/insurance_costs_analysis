@@ -43,6 +43,15 @@ insurance_costs_clean <- insurance_costs_clean %>%
 
 insurance_costs_clean <- insurance_costs_clean %>%
   mutate(
+    bmi_category = factor(
+      bmi_category,
+      levels = c("Underweight", "Normal", "Overweight", "Obese"),
+      ordered = TRUE
+    )
+  )
+
+insurance_costs_clean <- insurance_costs_clean %>%
+  mutate(
     age_group = case_when(
       age < 30 ~ "Young",
       age < 50 ~ "Middle",
@@ -65,3 +74,4 @@ glimpse(insurance_costs_clean)
 # - annual_checkups hade 20 saknade värden
 # - exercise_level hade 22 saknade värden
 # - Saknade värden är relativt få så de lämnas och hanteras med na.rm = TRUE 
+
