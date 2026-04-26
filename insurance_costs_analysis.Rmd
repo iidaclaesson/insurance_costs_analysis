@@ -18,7 +18,7 @@ library(tidyverse)
 library(skimr)
 library(patchwork)
 
-orders_raw <- readr::read_csv("data/ecommerce_orders.csv")
+orders_raw <- readr::read_csv("data/insurance_costs.csv")
 ```
 
 ## Inläsning av data
@@ -59,23 +59,25 @@ insurance_costs_raw %>% count(plan_type, sort = TRUE)
 
 
 
-p1 <- ggplot(insurance_costs_raw, aes(x = sex)) +
+
+p1 <- ggplot(insurance_costs_raw, aes(x = age)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "Fördelning av kön")
+  labs(title = "Age distribution")
 
 p2 <- ggplot(insurance_costs_raw, aes(x = bmi)) +
   geom_histogram(fill = "steelblue") +
-  labs(title = "Fördelning av BMI")
+  labs(title = "BMI distribution")
 
 p3 <- ggplot(insurance_costs_raw, aes(x = smoker)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "Antal rökare vs icke-rökare")
+  labs(title = "Smokers vs non smokers")
 
 p4 <- ggplot(insurance_costs_raw, aes(x = charges)) +
   geom_histogram(fill = "steelblue") +
-  labs(title = "Fördelning av försäkringskostnad")
+  labs(title = "Distribution of insurance costs")
 
 p1 + p2 + p3 + p4
+
 ```
 
 

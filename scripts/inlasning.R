@@ -34,28 +34,28 @@ insurance_costs_raw %>% count(plan_type, sort = TRUE)
 
 
 
-p1 <- ggplot(insurance_costs_raw, aes(x = sex)) +
+p1 <- ggplot(insurance_costs_raw, aes(x = age)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "Fördelning av kön")
+  labs(title = "Age distribution")
 
 p2 <- ggplot(insurance_costs_raw, aes(x = bmi)) +
   geom_histogram(fill = "steelblue") +
-  labs(title = "Fördelning av BMI")
+  labs(title = "BMI distribution")
 
 p3 <- ggplot(insurance_costs_raw, aes(x = smoker)) +
   geom_bar(fill = "steelblue") +
-  labs(title = "Antal rökare vs icke-rökare")
+  labs(title = "Smokers vs non smokers")
 
 p4 <- ggplot(insurance_costs_raw, aes(x = charges)) +
   geom_histogram(fill = "steelblue") +
-  labs(title = "Fördelning av försäkringskostnad")
+  labs(title = "Distribution of insurance costs")
 
 p1 + p2 + p3 + p4
 
 
 
 # Viktiga datatyper:
-# - age, region, bmi, children, smoker, chronic_condition, exercise_level, charges
+# - age, bmi, children, smoker, chronic_condition, charges
 
 # - sex, region, smoker, plan_type, chronic_condition, exercise_level -> faktorer
 # - age, bmi, children, prior_accidents, prior_claims, annual_checkups charges -> numeriska
